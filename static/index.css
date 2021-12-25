@@ -1,0 +1,31 @@
+#search-widget {
+        display: inline-block;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: .3em .8em;
+    text-align: center;
+}
+
+th {
+    background-color: #EEE;
+}
+
+.pos {
+    font-size: .5em;
+    font-weight: normal;
+}
+
+a {
+    color: #3838af;
+}
+
+a:hover {
+    color: #3874af;
+    cursor: pointer;
+}

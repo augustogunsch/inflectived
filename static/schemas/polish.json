@@ -1,0 +1,953 @@
+[
+  {
+    "pos": "noun",
+    "rows": [
+      [
+        {
+          "rowspan": 1,
+          "colspan": 1,
+          "display": "case"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "singular"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "plural"
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "nominative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["nominative", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["nominative", "plural"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "vocative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["vocative", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["vocative", "plural"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "genitive"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["genitive", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["genitive", "plural"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "dative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["dative", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["dative", "plural"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "accusative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["accusative", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["accusative", "plural"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "instrumental"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["instrumental", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["instrumental", "plural"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "locative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["locative", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["locative", "plural"]
+        }
+      ]
+    ]
+  },
+  {
+    "pos": "adj",
+    "rows": [
+      [
+        {
+          "colspan": 1,
+          "rowspan": 2,
+          "display": "cases"
+        },
+        {
+          "colspan": 4,
+          "rowspan": 1,
+          "display": "singular"
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "display": "plural"
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "masculine animate"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "masculine inanimate"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "neuter"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "feminine"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "virile"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "nonvirile"
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "nominative"
+        },
+        {
+          "colspan": 2,
+          "rowspan": 2,
+          "tags": ["masculine", "singular", "nominative", "vocative"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 2,
+          "tags": ["neuter", "singular", "nominative", "vocative"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 2,
+          "tags": ["feminine", "singular", "nominative", "vocative"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 2,
+          "tags": ["virile", "plural", "nominative", "vocative"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 2,
+          "tags": ["nonvirile", "plural", "nominative", "vocative"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "vocative"
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "genitive"
+        },
+        {
+          "colspan": 3,
+          "rowspan": 1,
+          "tags": ["masculine", "neuter", "singular", "genitive"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 2,
+          "tags": ["feminine", "singular", "genitive"]
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "tags": ["plural", "genitive"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "dative"
+        },
+        {
+          "colspan": 3,
+          "rowspan": 1,
+          "tags": ["masculine", "neuter", "singular", "dative"]
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "tags": ["plural", "dative"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "accusative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["masculine", "inanimate", "singular", "accusative"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["masculine", "animate", "singular", "accusative"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["neuter", "singular", "accusative"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 2,
+          "tags": ["feminine", "singular", "accusative"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["virile", "plural", "accusative"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["nonvirile", "plural", "accusative"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "instrumental"
+        },
+        {
+          "colspan": 3,
+          "rowspan": 2,
+          "tags": ["masculine", "neuter", "singular", "instrumental"]
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "tags": ["plural", "instrumental"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "locative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["feminine", "singular", "locative"]
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "tags": ["plural", "locative"]
+        }
+      ]
+    ]
+  },
+  {
+    "pos": "verb",
+    "rows": [
+      [
+        {
+          "colspan": 1,
+          "rowspan": 2,
+          "display": ""
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": ""
+        },
+        {
+          "colspan": 3,
+          "rowspan": 1,
+          "display": "singular"
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "display": "plural"
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "person"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "masculine"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "feminine"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "neuter"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "virile"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "nonvirile"
+        }
+      ],
+      [
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "display": "infinitive"
+        },
+        {
+          "colspan": 5,
+          "rowspan": 1,
+          "tags": ["infinitive"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 4,
+          "display": "present tense"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "1st"
+        },
+        {
+          "colspan": 3,
+          "rowspan": 1,
+          "tags": ["singular", "first-person", "present"]
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "tags": ["plural", "first-person", "present"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "2nd"
+        },
+        {
+          "colspan": 3,
+          "rowspan": 1,
+          "tags": ["singular", "second-person", "present"]
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "tags": ["plural", "second-person", "present"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "3rd"
+        },
+        {
+          "colspan": 3,
+          "rowspan": 1,
+          "tags": ["singular", "third-person", "present"]
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "tags": ["plural", "third-person", "present"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "impersonal"
+        },
+        {
+          "colspan": 5,
+          "rowspan": 1,
+          "tags": ["impersonal", "present"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 4,
+          "display": "past tense"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "1st"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "masculine", "first-person", "past"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "feminine", "first-person", "past"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 2,
+          "tags": []
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "virile", "first-person", "past"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "nonvirile", "first-person", "past"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "2nd"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "masculine", "second-person", "past"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "feminine", "second-person", "past"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "virile", "second-person", "past"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "nonvirile", "second-person", "past"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "3rd"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "masculine", "third-person", "past"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "feminine", "third-person", "past"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "neuter", "third-person", "past"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "virile", "third-person", "past"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "nonvirile", "third-person", "past"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "impersonal"
+        },
+        {
+          "colspan": 5,
+          "rowspan": 1,
+          "tags": ["impersonal", "past"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 4,
+          "display": "future tense"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "1st"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "masculine", "first-person", "future"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "feminine", "first-person", "future"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 2,
+          "tags": []
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "virile", "first-person", "future"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "nonvirile", "first-person", "future"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "2nd"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "masculine", "second-person", "future"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "feminine", "second-person", "future"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "virile", "second-person", "future"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "nonvirile", "second-person", "future"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "3rd"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "masculine", "third-person", "future"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "feminine", "third-person", "future"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "neuter", "third-person", "future"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "virile", "third-person", "future"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "nonvirile", "third-person", "future"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "impersonal"
+        },
+        {
+          "colspan": 5,
+          "rowspan": 1,
+          "tags": ["impersonal", "future"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 4,
+          "display": "conditional"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "1st"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "masculine", "first-person", "conditional"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "feminine", "first-person", "conditional"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 2,
+          "tags": []
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "virile", "first-person", "conditional"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "nonvirile", "first-person", "conditional"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "2nd"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "masculine", "second-person", "conditional"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "feminine", "second-person", "conditional"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "virile", "second-person", "conditional"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "nonvirile", "second-person", "conditional"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "3rd"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "masculine", "third-person", "conditional"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "feminine", "third-person", "conditional"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["singular", "neuter", "third-person", "conditional"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "virile", "third-person", "conditional"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["plural", "nonvirile", "third-person", "conditional"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "impersonal"
+        },
+        {
+          "colspan": 5,
+          "rowspan": 1,
+          "tags": ["impersonal", "conditional"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 3,
+          "display": "imperative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "1st"
+        },
+        {
+          "colspan": 3,
+          "rowspan": 1,
+          "tags": ["imperative", "first-person", "singular"]
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "tags": ["imperative", "first-person", "plural"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "2nd"
+        },
+        {
+          "colspan": 3,
+          "rowspan": 1,
+          "tags": ["imperative", "second-person", "singular"]
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "tags": ["imperative", "second-person", "plural"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "3rd"
+        },
+        {
+          "colspan": 3,
+          "rowspan": 1,
+          "tags": ["imperative", "third-person", "singular"]
+        },
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "tags": ["imperative", "third-person", "plural"]
+        }
+      ],
+      [
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "display": "active adjectival participle"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["active", "adjectival", "participle", "masculine", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["active", "adjectival", "participle", "feminine", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["active", "adjectival", "participle", "neuter", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["active", "adjectival", "participle", "virile", "plural"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["active", "adjectival", "participle", "nonvirile", "plural"]
+        }
+      ],
+      [
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "display": "passive adjectival participle"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["passive", "adjectival", "participle", "masculine", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["passive", "adjectival", "participle", "feminine", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["passive", "adjectival", "participle", "neuter", "singular"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["passive", "adjectival", "participle", "virile", "plural"]
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["passive", "adjectival", "participle", "nonvirile", "plural"]
+        }
+      ],
+      [
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "display": "contemporary adjectival participle"
+        },
+        {
+          "colspan": 5,
+          "rowspan": 1,
+          "tags": ["contemporary", "adjectival", "participle"]
+        }
+      ],
+      [
+        {
+          "colspan": 2,
+          "rowspan": 1,
+          "display": "verbal noun"
+        },
+        {
+          "colspan": 5,
+          "rowspan": 1,
+          "tags": ["noun-from-verb"]
+        }
+      ]
+    ]
+  }
+]
