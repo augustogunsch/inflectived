@@ -29,7 +29,7 @@ function getWord(word) {
         url: '/langs/polish/words/' + word,
 
         success: (data) => {
-            $('#ajax-content').html(generateHtml(data))
+            $('#ajax-content').html(generateHtml(word, data))
             searchBar.autocomplete('close');
         },
 
@@ -108,59 +108,67 @@ function generateTable(schemas, pos, forms) {
     return html;
 }
 
-function generateHtml(data) {
+function generateHtml(word, data) {
     let html = '';
 
-    data.forEach(entry => {
-        html += `<h1>${entry.word} <span class="pos">(${entry.pos})</span></h1>`
-        if('senses' in entry) {
-            if('tags' in entry.senses[0]) {
-                html += '<div class="tags">'
-                html += entry.senses[0].tags.map(tag => `<mark>${tag}</mark>`).join(', ');
-                html += '</div>'
+    if(data.length === 0) {
+        html += `<h1>Not found: <mark>${word}</mark></h1>`;
+    } else {
+        data.forEach(entry => {
+            html += `<h1>${entry.word} <span class="pos">(${entry.pos})</span></h1>`
+            if('senses' in entry) {
+                if('tags' in entry.senses[0]) {
+                    html += '<div class="tags">'
+                    html += entry.senses[0].tags.map(tag => `<mark>${tag}</mark>`).join(', ');
+                    html += '</div>'
+                }
+
+                html += '<h2>Senses</h2>';
+
+                html += '<ol>';
+                entry.senses.forEach(sense => {
+                    html += '<li>'
+
+                    if('form_of' in sense) {
+                        let word = sense.form_of[0].word;
+                        html += sense.glosses[0].replace(new RegExp(`of ${word}$`), '');
+                        html += ` of <a href="#" class="link-primary" onclick="getWord('${word}')">${word}</a>`;
+                    } else {
+                        html += sense.glosses[0];
+                    }
+
+                    html += '</li>';
+                })
+                html += '</ol>';
             }
 
-            html += '<h2>Senses</h2>';
+            if('forms' in entry) {
+                if(entry.pos === 'verb') {
+                    let conjugation = entry.forms.filter(form =>
+                        'source' in form && form.source === 'Conjugation');
 
-            html += '<ol>';
-            entry.senses.forEach(sense => {
-                html += '<li>'
+                    if(conjugation.length > 0) {
+                        html += '<h2>Conjugation</h2>';
 
-                if('form_of' in sense) {
-                    let word = sense.form_of[0].word;
-                    html += sense.glosses[0].replace(new RegExp(`of ${word}$`), '');
-                    html += ` of <a href="#" class="link-primary" onclick="getWord('${word}')">${word}</a>`;
+                        html += generateTable(polishSchemas, entry.pos, conjugation);
+                    }
                 } else {
-                    html += sense.glosses[0];
-                }
+                    let declension = entry.forms.filter(form =>
+                        'source' in form && form.source === 'Declension');
 
-                html += '</li>';
-            })
-            html += '</ol>';
-        }
+                    if(declension.length > 0) {
+                        html += '<h2>Declension</h2>';
 
-        if('forms' in entry) {
-            if(entry.pos === 'verb') {
-                let conjugation = entry.forms.filter(form =>
-                    'source' in form && form.source === 'Conjugation');
-
-                if(conjugation.length > 0) {
-                    html += '<h2>Conjugation</h2>';
-
-                    html += generateTable(polishSchemas, entry.pos, conjugation);
-                }
-            } else {
-                let declension = entry.forms.filter(form =>
-                    'source' in form && form.source === 'Declension');
-
-                if(declension.length > 0) {
-                    html += '<h2>Declension</h2>';
-
-                    html += generateTable(polishSchemas, entry.pos, declension);
+                        html += generateTable(polishSchemas, entry.pos, declension);
+                    }
                 }
             }
-        }
-    });
+        });
+    }
 
     return html;
 }
+
+$(document).ready(function() {
+    $('#search-bar').select();
+});
