@@ -18,6 +18,7 @@ $(document).ready(() => {
     let searchBar = $('#search-bar');
 
     searchBar.autocomplete({
+        appendTo: '#search-form',
         source: (request, response) => {
             $.ajax({
                 url: '/langs/polish/words?like=' + request.term + '&limit=20&offset=0',
@@ -29,10 +30,6 @@ $(document).ready(() => {
 
     searchBar.on('focus', e => {
         setTimeout(() => e.currentTarget.select(), 100);
-    });
-
-    $(window).on('scroll', () => {
-        searchBar.autocomplete('close');
     });
 
     $('#search-form').on('submit', (e) => {
