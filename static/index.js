@@ -159,7 +159,8 @@ $(document).ready(() => {
                             html += sense.glosses[0].replace(new RegExp(`of ${word}$`), '');
                             html += ` of <a href="#${word}" class="link-primary">${word}</a>`;
                         } else {
-                            html += sense.glosses[0];
+                            let link = ' of <a href="#$1" class="link-primary">$1</a>';
+                            html += sense.glosses[0].replace(/of\s+([\u00BF-\u1FFF\u2C00-\uD7FF\w]+)\s*$/, link);
                         }
 
                         html += '</li>';
