@@ -16,6 +16,11 @@ searchBar.autocomplete({
     }
 });
 
+let bar = $('#search-bar')
+bar.click((e) => {
+    bar[0].select();
+});
+
 $('#search-form').on('submit', (e) => {
     e.preventDefault();
 
