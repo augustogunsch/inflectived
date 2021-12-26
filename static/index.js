@@ -23,11 +23,16 @@ $(document).ready(() => {
                 url: '/langs/polish/words?like=' + request.term + '&limit=20&offset=0',
                 success: data => response(data)
             })
-        }
+        },
+        select: (_, ui) => window.location.hash = ui.item.value
     });
 
     searchBar.on('focus', e => {
         setTimeout(() => e.currentTarget.select(), 100);
+    });
+
+    $(window).on('scroll', () => {
+        searchBar.autocomplete('close');
     });
 
     $('#search-form').on('submit', (e) => {
@@ -40,18 +45,20 @@ $(document).ready(() => {
 
     function getWord() {
         let word = window.location.hash.replace('#', '');
+
         $.ajax({
             url: '/langs/polish/words/' + word,
 
             success: (data) => {
                 $('#ajax-content').html(generateHtml(word, data))
-                window.scrollTo(0, 0);
-                searchBar.select();
-                searchBar.autocomplete('close');
             },
 
             error: err => console.error(err)
         })
+
+        window.scrollTo(0, 0);
+        searchBar.select();
+        searchBar.autocomplete('close');
     }
 
     function getCells(forms, tags) {
