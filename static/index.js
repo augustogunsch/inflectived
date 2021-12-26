@@ -26,7 +26,7 @@ $(document).ready(() => {
         }
     });
 
-    $('#search-bar').on('focus', e => {
+    searchBar.on('focus', e => {
         setTimeout(() => e.currentTarget.select(), 100);
     });
 
@@ -45,8 +45,9 @@ $(document).ready(() => {
 
             success: (data) => {
                 $('#ajax-content').html(generateHtml(word, data))
-                searchBar.autocomplete('close');
                 window.scrollTo(0, 0);
+                searchBar.select();
+                searchBar.autocomplete('close');
             },
 
             error: err => console.error(err)
