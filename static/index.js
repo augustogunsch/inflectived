@@ -162,11 +162,3 @@ function generateHtml(data) {
 
     return html;
 }
-
-function listForms(data) {
-    html += '<ul>';
-    data.forms.map(form => {
-        html += `<li>${form.form}</li>`;
-    })
-    html += '</ul>';
-}
