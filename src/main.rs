@@ -1,7 +1,6 @@
 //mod database;
 use rocket::routes;
 use rocket::fs::FileServer;
-use rocket::data::{Limits, ToByteUnit};
 use clap::{App, AppSettings, Arg, SubCommand};
 //use database::WordDb;
 mod database;
@@ -83,8 +82,8 @@ async fn main() {
             rocket::custom(figment)
                    .manage(db)
                    .mount("/static", FileServer::from("static/"))
-                   .mount("/", routes![routes::get_word,
-                                       routes::get_word_like,
+                   .mount("/", routes![routes::get_entries,
+                                       routes::get_entries_like,
                                        routes::frontend])
                    .launch()
                    .await.unwrap();

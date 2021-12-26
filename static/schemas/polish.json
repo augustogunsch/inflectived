@@ -142,6 +142,11 @@
   },
   {
     "pos": "adj",
+    "ignoreUnused": [
+      ["dative", "feminine", "singular"],
+      ["instrumental", "feminine", "singular"],
+      ["locative", "masculine", "neuter", "singular"]
+    ],
     "rows": [
       [
         {

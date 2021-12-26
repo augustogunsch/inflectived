@@ -47,12 +47,17 @@ impl WordDb {
         transaction.execute(&format!("
         CREATE TABLE {}_words (
                 id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                word TINYTEXT UNIQUE NOT NULL,
+                word TINYTEXT NOT NULL,
                 type_id INTEGER NOT NULL,
                 content MEDIUMTEXT NOT NULL,
                 FOREIGN KEY (type_id)
                     REFERENCES {}_types (id)
         )", &lang.code, &lang.code), []).unwrap();
+
+        transaction.execute(&format!("
+        CREATE INDEX word_index
+        ON {}_words (word)
+        ", &lang.code), []).unwrap();
 
         transaction.commit().unwrap();
     }
@@ -102,8 +107,7 @@ impl WordDb {
         }
 
         println!("Parsing data...");
-        let entries = WiktionaryEntries::parse_data(data)
-                                        .merge_duplicates();
+        let entries = WiktionaryEntries::parse_data(data);
 
         println!("Inserting data...");
         self.insert_entries(lang, entries);

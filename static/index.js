@@ -31,7 +31,9 @@ function getWord(word) {
         success: (data) => {
             $('#ajax-content').html(generateHtml(data))
             searchBar.autocomplete('close');
-        }
+        },
+
+        error: err => console.error(err)
     })
 }
 
@@ -90,6 +92,12 @@ function generateTable(schemas, pos, forms) {
 
     let unusedCells = forms.filter(cell => !cell.used);
 
+    if(schema.ignoreUnused) {
+        unusedCells = unusedCells.filter(cell =>
+            !schema.ignoreUnused.map(tags => tags.every(tag => cell.tags.includes(tag)))
+        );
+    }
+
     if(unusedCells.length > 0) {
         html += '<h3>Other</h3>';
         html += generateList(unusedCells);
@@ -100,10 +108,6 @@ function generateTable(schemas, pos, forms) {
 
 function generateHtml(data) {
     let html = '';
-
-    if(Object.prototype.toString.call(data) !== '[object Array]') {
-        data = [data];
-    }
 
     data.forEach(entry => {
         html += `<h1>${entry.word} <span class="pos">(${entry.pos})</span></h1>`
