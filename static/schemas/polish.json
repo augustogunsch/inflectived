@@ -1,6 +1,107 @@
 [
   {
-    "pos": "noun",
+    "pos": ["pron"],
+    "rows": [
+      [
+        {
+          "rowspan": 1,
+          "colspan": 1,
+          "display": "case"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "singular"
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "nominative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["nominative", "singular"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "vocative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["vocative", "singular"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "genitive"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["genitive", "singular"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "dative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["dative", "singular"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "accusative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["accusative", "singular"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "instrumental"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["instrumental", "singular"]
+        }
+      ],
+      [
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "display": "locative"
+        },
+        {
+          "colspan": 1,
+          "rowspan": 1,
+          "tags": ["locative", "singular"]
+        }
+      ]
+    ]
+  },
+  {
+    "pos": ["noun"],
     "rows": [
       [
         {
@@ -141,7 +242,7 @@
     ]
   },
   {
-    "pos": "adj",
+    "pos": ["adj"],
     "ignoreUnused": [
       ["dative", "feminine", "singular"],
       ["instrumental", "feminine", "singular"],
@@ -349,7 +450,7 @@
     ]
   },
   {
-    "pos": "verb",
+    "pos": ["verb"],
     "rows": [
       [
         {

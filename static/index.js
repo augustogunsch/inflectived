@@ -66,7 +66,7 @@ function generateList(data) {
 }
 
 function generateTable(schemas, pos, forms) {
-    let schema = schemas.find(schema => schema.pos === pos);
+    let schema = schemas.find(schema => schema.pos.includes(pos));
 
     // No schema was provided by the server - fallback to a list
     if(!schema)
