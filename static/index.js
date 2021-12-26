@@ -72,7 +72,7 @@ function generateTable(schemas, pos, forms) {
     if(!schema)
         return generateList(forms);
 
-	let html = '<div class="table-responsive">';
+    let html = '<div class="table-responsive">';
     html += '<table class="table table-sm table-bordered border-dark text-center align-middle">';
 
     schema.rows.forEach(row => {
@@ -90,7 +90,7 @@ function generateTable(schemas, pos, forms) {
     });
 
     html += '</table>';
-	html += '</div>';
+    html += '</div>';
 
     let unusedCells = forms.filter(cell => !cell.used);
 
@@ -117,9 +117,17 @@ function generateHtml(word, data) {
         data.forEach(entry => {
             html += `<h1>${entry.word} <span class="pos">(${entry.pos})</span></h1>`
             if('senses' in entry) {
-                if('tags' in entry.senses[0]) {
-                    html += '<div class="tags">'
-                    html += entry.senses[0].tags.map(tag => `<mark>${tag}</mark>`).join(', ');
+                let tags = [];
+                entry.senses.forEach(sense => {
+                    if('tags' in sense) {
+                        tags.push(...sense.tags);
+                    }
+                });
+
+                if(tags.length > 0) {
+                    tags = [...new Set(tags)];
+                    html += '<div class="tags">Tags: '
+                    html += tags.map(tag => `<mark>${tag}</mark>`).join(', ')
                     html += '</div>'
                 }
 
