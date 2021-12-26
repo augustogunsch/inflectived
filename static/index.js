@@ -72,13 +72,14 @@ function generateTable(schemas, pos, forms) {
     if(!schema)
         return generateList(forms);
 
-    let html = '<table>';
+	let html = '<div class="table-responsive">';
+    html += '<table class="table table-sm table-bordered border-dark text-center align-middle">';
 
     schema.rows.forEach(row => {
         html += '<tr>';
         row.forEach(cell => {
             if('display' in cell) {
-                html += `<th colspan="${cell.colspan}" rowspan="${cell.rowspan}">${cell.display}</th>`;
+                html += `<th class="table-light border-dark" colspan="${cell.colspan}" rowspan="${cell.rowspan}">${cell.display}</th>`;
             } else {
                 let cells = getCells(forms, cell.tags);
                 let content = cells ? cells.map(cell => cell.form).join(', <br>') : '-';
@@ -89,6 +90,7 @@ function generateTable(schemas, pos, forms) {
     });
 
     html += '</table>';
+	html += '</div>';
 
     let unusedCells = forms.filter(cell => !cell.used);
 
@@ -114,7 +116,7 @@ function generateHtml(data) {
         if('senses' in entry) {
             if('tags' in entry.senses[0]) {
                 html += '<div class="tags">'
-                html += entry.senses[0].tags.map(tag => `<span class="tag">${tag}</span>`).join(', ');
+                html += entry.senses[0].tags.map(tag => `<mark>${tag}</mark>`).join(', ');
                 html += '</div>'
             }
 
@@ -127,7 +129,7 @@ function generateHtml(data) {
                 if('form_of' in sense) {
                     let word = sense.form_of[0].word;
                     html += sense.glosses[0].replace(new RegExp(`of ${word}$`), '');
-                    html += ` of <a onclick="getWord('${word}')">${word}</a>`;
+                    html += ` of <a href="#" class="link-primary" onclick="getWord('${word}')">${word}</a>`;
                 } else {
                     html += sense.glosses[0];
                 }
