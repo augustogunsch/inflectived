@@ -32,28 +32,6 @@ impl cmp::Ord for WiktionaryEntry {
 }
 
 impl WiktionaryEntry {
-    fn merge(first: Self, second: Self) -> Self {
-        let output_parsed: JsonValue = match first.parsed_json {
-            Array(mut objs) => {
-                objs.push(second.parsed_json);
-                JsonValue::Array(objs)
-            },
-            Object(_) => {
-                let mut objs: Vec<JsonValue> = Vec::new();
-                objs.push(first.parsed_json);
-                objs.push(second.parsed_json);
-                JsonValue::Array(objs)
-            },
-            _ => panic!("Expected array or object, found {}", first.parsed_json.pretty(8))
-        };
-
-        Self {
-            word: first.word,
-            type_: first.type_,
-            parsed_json: output_parsed
-        }
-    }
-
     pub fn parse(unparsed_json: &str) -> Self {
         let json = json::parse(unparsed_json).unwrap();
 
@@ -98,31 +76,6 @@ impl WiktionaryEntries {
         }
 
         Self(entries)
-    }
-
-    pub fn merge_duplicates(mut self) -> Self {
-        self.0.sort();
-
-        let mut entries = self.0.into_iter();
-        let mut last_entry: WiktionaryEntry = entries.next().unwrap();
-
-        let mut new_entries = Vec::new();
-
-        for entry in entries {
-            if last_entry == entry {
-                last_entry = WiktionaryEntry::merge(last_entry, entry);
-            }
-            else {
-                new_entries.push(last_entry);
-                last_entry = entry;
-            }
-        }
-
-        new_entries.push(last_entry);
-
-        self.0 = new_entries;
-
-        self
     }
 }
 
