@@ -1,6 +1,6 @@
 use std::cmp;
 use std::iter::IntoIterator;
-use json::JsonValue::{Object, Short, Array};
+use json::JsonValue::{Object, Short};
 use json::JsonValue;
 
 #[derive (Clone)]

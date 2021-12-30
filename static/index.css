@@ -38,3 +38,7 @@ h1, h2, h3 {
 body {
 	font-family: serif;
 }
+
+li {
+    margin-top: .2em;
+}

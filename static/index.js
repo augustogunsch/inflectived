@@ -15,7 +15,7 @@ $(document).ready(() => {
         getWord();
     };
 
-    let searchBar = $('#search-bar');
+    const searchBar = $('#search-bar');
 
     searchBar.autocomplete({
         appendTo: '#search-form',
@@ -32,7 +32,7 @@ $(document).ready(() => {
         setTimeout(() => e.currentTarget.select(), 100);
     });
 
-    $('#search-form').on('submit', (e) => {
+    $('#search-form').on('submit', e => {
         e.preventDefault();
 
         let word = e.target[0].value
@@ -56,6 +56,9 @@ $(document).ready(() => {
         window.scrollTo(0, 0);
         searchBar.select();
         searchBar.autocomplete('close');
+        // Sometimes autocomplete opens after close was called
+        // A better fix should be made
+        setTimeout(() => searchBar.autocomplete('close'), 1000);
     }
 
     function getCells(forms, tags) {
@@ -165,6 +168,11 @@ $(document).ready(() => {
                         } else {
                             let link = ' of <a href="#$1" class="link-primary">$1</a>';
                             html += sense.glosses[0].replace(/of\s+([\u00BF-\u1FFF\u2C00-\uD7FF\w]+)\s*$/, link);
+                        }
+
+                        if('tags' in sense) {
+                            html += ' - '
+                            html += sense.tags.map(tag => `<mark>${tag}</mark>`).join(', ')
                         }
 
                         html += '</li>';
