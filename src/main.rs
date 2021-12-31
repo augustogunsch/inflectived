@@ -1,3 +1,5 @@
+#![feature(slice_group_by)]
+
 //mod database;
 use rocket::routes;
 use rocket::fs::FileServer;

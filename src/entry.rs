@@ -1,14 +1,13 @@
 use std::cmp;
-use std::iter::IntoIterator;
-use json::JsonValue::{Object, Short};
-use json::JsonValue;
+use std::slice::Iter;
+use serde_json::Value;
+use serde::Deserialize;
 
-#[derive (Clone)]
-#[derive (Debug)]
+#[derive (Clone, Debug)]
 pub struct WiktionaryEntry {
     pub word: String,
     pub type_: String,
-    pub parsed_json: JsonValue
+    pub parsed_json: Value,
 }
 
 impl cmp::PartialEq for WiktionaryEntry {
@@ -33,34 +32,23 @@ impl cmp::Ord for WiktionaryEntry {
 
 impl WiktionaryEntry {
     pub fn parse(unparsed_json: &str) -> Self {
-        let json = json::parse(unparsed_json).unwrap();
+        let json: Value = serde_json::from_str(unparsed_json).unwrap();
 
-        let (word, type_) = match &json {
-            Object(o) => ( 
-                match o.get("word") {
-                    Some(w) => match w {
-                        Short(s) => s.to_string(),
-                        JsonValue::String(s) => s.clone(),
-                        _ => panic!("Not a string: {}", w.pretty(8))
-                    },
-                    None => panic!("No field 'word': {}", o.pretty(8))
-                },
-                match o.get("pos") {
-                    Some(w) => match w {
-                        Short(s) => s.to_string(),
-                        JsonValue::String(s) => s.clone(),
-                        _ => panic!("Not a string: {}", w.pretty(8))
-                    },
-                    None => panic!("No field 'pos': {}", o.pretty(8))
-                }
-            ),
-            _ => panic!("Not an object: {}", json.pretty(8))
-        };
+        let word = String::from(json["word"].as_str().unwrap());
+        let type_ = String::from(json["pos"].as_str().unwrap());
 
         Self {
             word,
             type_,
             parsed_json: json
+        }
+    }
+
+    pub fn new(word: String, type_: String, parsed_json: Value) -> Self {
+        Self {
+            word,
+            type_,
+            parsed_json
         }
     }
 }
@@ -77,13 +65,16 @@ impl WiktionaryEntries {
 
         Self(entries)
     }
-}
 
-impl IntoIterator for WiktionaryEntries {
-    type Item = WiktionaryEntry;
-    type IntoIter = std::vec::IntoIter<Self::Item>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.0.into_iter()
+    pub fn iter(&self) -> Iter<WiktionaryEntry> {
+        self.0.iter()
     }
 }
+
+#[derive(Debug, Deserialize)]
+pub struct Form {
+    pub form: String,
+    pub tags: Vec<String>,
+    pub source: Option<String>,
+}
+

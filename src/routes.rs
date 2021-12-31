@@ -19,9 +19,9 @@ pub fn frontend() -> Option<content::Html<String>> {
 
 #[get("/langs/<lang>/words/<word>")]
 pub fn get_entries(db: &State<WordDb>, lang: &str, word: &str) -> status::Custom<content::Json<String>> {
-    let connection = db.connect();
+    let conn = db.connect();
 
-    let mut statement = connection.prepare(&format!(
+    let mut statement = conn.prepare(&format!(
         "SELECT content
         FROM {}_words
         WHERE word = ?",
@@ -38,6 +38,7 @@ pub fn get_entries(db: &State<WordDb>, lang: &str, word: &str) -> status::Custom
         words.push_str(&content);
         words.push(',');
     }
+    // Remove last comma
     if words.pop().unwrap() == '[' {
         words.push('[');
     }
@@ -48,9 +49,9 @@ pub fn get_entries(db: &State<WordDb>, lang: &str, word: &str) -> status::Custom
 
 #[get("/langs/<lang>/words?<like>&<limit>&<offset>")]
 pub fn get_entries_like(db: &State<WordDb>, lang: &str, like: &str, limit: usize, offset: usize) -> Json<Vec<String>> {
-    let connection = db.connect();
+    let conn = db.connect();
 
-    let mut statement = connection.prepare(&format!(
+    let mut statement = conn.prepare(&format!(
         "SELECT word
         FROM {}_words
         WHERE word LIKE ?
