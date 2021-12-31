@@ -136,7 +136,7 @@ $(document).ready(() => {
         let html = '';
 
         if(data.length === 0) {
-            html += `<h1>Not found: <mark>${word}</mark></h1>`;
+            html += `<h1>Not found: <mark>${decodeURIComponent(word)}</mark></h1>`;
         } else {
             data.forEach(entry => {
                 html += `<h1>${entry.word} <span class="pos">(${entry.pos})</span></h1>`
