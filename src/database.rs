@@ -1,4 +1,5 @@
 use std::fs;
+use std::io::ErrorKind;
 
 use reqwest;
 use rusqlite::{Connection, Transaction};
@@ -11,20 +12,24 @@ use crate::language::Language;
 use crate::entry::{WiktionaryEntries, WiktionaryEntry};
 use crate::entry::Form;
 
+const DB_DIR: &str = "/usr/share/inflectived/";
+const CACHE_DIR: &str = "/var/cache/";
+
 /// A database of Wiktionary entries
 pub struct WordDb {
-    connection: String
+    db_path: String
 }
 
 impl WordDb {
-    pub fn new(db_path: &str) -> Self {
-        Self {
-            connection: String::from(db_path)
-        }
+    pub fn new(db_name: &str) -> Self {
+        let mut db_path = String::from(DB_DIR);
+        db_path.push_str(db_name);
+
+        Self { db_path }
     }
 
     pub fn connect(&self) -> Connection {
-        Connection::open(&self.connection).unwrap()
+        Connection::open(&self.db_path).unwrap()
     }
 
     pub fn clean_tables(&mut self, lang: &Language) {
@@ -169,9 +174,24 @@ impl WordDb {
         transaction.commit().unwrap();
     }
 
+    fn try_create_dir(&self, dir: &str) {
+        match fs::create_dir(dir) {
+            Err(e) => match e.kind() {
+                ErrorKind::AlreadyExists => {},
+                _ => panic!("{}", e)
+            },
+            _ => {}
+        }
+    }
+
     pub async fn upgrade_lang(&mut self, lang: &Language) {
+        self.try_create_dir(DB_DIR);
+
         println!("Trying to read cached data...");
-        let cached_data = fs::read_to_string("Polish.json");
+        let mut cache_file = String::from(CACHE_DIR);
+        cache_file.push_str("Polish.json");
+
+        let cached_data = fs::read_to_string(&cache_file);
         let mut request = None;
 
         if let Err(_) = cached_data {
@@ -186,8 +206,11 @@ impl WordDb {
             // Actually, the request was sent before
             println!("Requesting data...");
             data = request.await.unwrap().text().await.unwrap();
-            println!("Caching data...");
-            fs::write("Polish.json", &data).unwrap();
+            if cfg!(unix) {
+                println!("Caching data...");
+                self.try_create_dir(CACHE_DIR);
+                fs::write(&cache_file, &data).unwrap();
+            }
         }
         else {
             data = cached_data.unwrap();

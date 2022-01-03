@@ -49,7 +49,7 @@ async fn main() {
         .setting(AppSettings::SubcommandRequiredElseHelp)
         .get_matches();
 
-    let mut db = WordDb::new("test.db");
+    let mut db = WordDb::new("inflectived.db");
 
     let lang = Language::new("polish",
                              vec![String::from("adj"),
