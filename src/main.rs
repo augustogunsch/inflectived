@@ -8,10 +8,15 @@ use clap::{App, AppSettings, Arg, SubCommand};
 mod database;
 mod language;
 mod entry;
-mod routes;
+mod views;
 
 use database::WordDb;
 use language::Language;
+
+
+const MAJOR: i32 = 0;
+const MINOR: i32 = 1;
+const PATCH: i32 = 0;
 
 #[rocket::main]
 async fn main() {
@@ -51,7 +56,8 @@ async fn main() {
 
     let mut db = WordDb::new("inflectived.db");
 
-    let lang = Language::new("polish",
+    let lang = Language::new("pl",
+                             "Polish",
                              vec![String::from("adj"),
                                   String::from("noun"),
                                   String::from("verb"),
@@ -84,9 +90,10 @@ async fn main() {
             rocket::custom(figment)
                    .manage(db)
                    .mount("/static", FileServer::from("static/"))
-                   .mount("/", routes![routes::get_entries,
-                                       routes::get_entries_like,
-                                       routes::frontend])
+                   .mount("/", routes![views::get_entries,
+                                       views::get_entries_like,
+                                       views::get_langs,
+                                       views::frontend])
                    .launch()
                    .await.unwrap();
         },

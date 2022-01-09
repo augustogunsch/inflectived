@@ -9,7 +9,7 @@ use rusqlite::params;
 
 use crate::database::WordDb;
 
-#[get("/frontend")]
+#[get("/")]
 pub fn frontend() -> Option<content::Html<String>> {
     match fs::read_to_string("static/index.html") {
         Ok(file) => Some(content::Html(file)),
@@ -69,4 +69,23 @@ pub fn get_entries_like(db: &State<WordDb>, lang: &str, like: &str, limit: usize
     }
 
     Json(words)
+}
+
+#[get("/langs?<installed>")]
+pub fn get_langs(db: &State<WordDb>, installed: bool) -> Json<Vec<String>> {
+    let conn = db.connect();
+
+    let mut langs: Vec<String> = Vec::new();
+
+    if installed {
+        let mut statement = conn.prepare("SELECT name FROM langs").unwrap();
+
+        let mut rows = statement.query([]).unwrap();
+
+        while let Some(row) = rows.next().unwrap() {
+            langs.push(row.get(0).unwrap());
+        }
+    }
+
+    Json(langs)
 }

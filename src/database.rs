@@ -13,6 +13,7 @@ use serde_json;
 use crate::language::Language;
 use crate::entry::{WiktionaryEntries, WiktionaryEntry};
 use crate::entry::Form;
+use crate::{MAJOR, MINOR, PATCH};
 
 const DB_DIR: &str = "/usr/share/inflectived/";
 const CACHE_DIR: &str = "/var/cache/";
@@ -38,7 +39,15 @@ impl WordDb {
         let mut conn = self.connect();
         let transaction = conn.transaction().unwrap();
 
-        if let Err(e) = transaction.execute(&format!("DROP TABLE IF EXISTS {0}_words", &lang.code), []) {
+        if let Err(e) = transaction.execute("
+        CREATE TABLE IF NOT EXISTS langs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            code TINYTEXT UNIQUE NOT NULL,
+            name TINYTEXT NOT NULL,
+            major INTEGER NOT NULL,
+            minor INTEGER NOT NULL,
+            patch INTEGER NOT NULL
+        )", []) {
             match e {
                 SqliteFailure(f, _) => match f.code {
                         ErrorCode::ReadOnly => {
@@ -52,12 +61,15 @@ impl WordDb {
             }
         }
 
+        transaction.execute("DELETE FROM langs WHERE code = ?", [&lang.code]).unwrap();
+
+        transaction.execute(&format!("DROP TABLE IF EXISTS {0}_words", &lang.code), []).unwrap();
         transaction.execute(&format!("DROP TABLE IF EXISTS {0}_types", &lang.code), []).unwrap();
 
         transaction.execute(&format!("
         CREATE TABLE {0}_types (
-                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                name TINYTEXT UNIQUE NOT NULL
+            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            name TINYTEXT UNIQUE NOT NULL
         )", &lang.code), []).unwrap();
 
         for type_ in &lang.types {
@@ -70,18 +82,23 @@ impl WordDb {
 
         transaction.execute(&format!("
         CREATE TABLE {0}_words (
-                id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                word TINYTEXT NOT NULL,
-                type_id INTEGER NOT NULL,
-                content MEDIUMTEXT NOT NULL,
-                FOREIGN KEY (type_id)
-                    REFERENCES {0}_types (id)
+            id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            word TINYTEXT NOT NULL,
+            type_id INTEGER NOT NULL,
+            content MEDIUMTEXT NOT NULL,
+            FOREIGN KEY (type_id)
+                REFERENCES {0}_types (id)
         )", &lang.code), []).unwrap();
 
         transaction.execute(&format!("
         CREATE INDEX word_index
         ON {0}_words (word)
         ", &lang.code), []).unwrap();
+
+        transaction.execute("
+        INSERT INTO langs (code, name, major, minor, patch)
+        VALUES (?, ?, ?, ?, ?)
+        ", params![&lang.code, &lang.name, MAJOR, MINOR, PATCH]).unwrap();
 
         transaction.commit().unwrap();
     }
