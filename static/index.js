@@ -163,7 +163,7 @@ $(document).ready(() => {
 
                         if('form_of' in sense) {
                             let word = sense.form_of[0].word;
-                            html += sense.glosses[0].replace(new RegExp(`of ${word}$`), '');
+                            html += sense.glosses[0].replace(new RegExp(`of ${word}.?$`), '');
                             html += ` of <a href="#${word}" class="link-primary">${word}</a>`;
                         } else {
                             let link = ' of <a href="#$1" class="link-primary">$1</a>';
