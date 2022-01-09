@@ -21,7 +21,7 @@ $(document).ready(() => {
         appendTo: '#search-form',
         source: (request, response) => {
             $.ajax({
-                url: '/langs/polish/words?like=' + request.term + '&limit=20&offset=0',
+                url: '/langs/pl/words?like=' + request.term + '&limit=20&offset=0',
                 success: data => response(data)
             })
         },
@@ -44,7 +44,7 @@ $(document).ready(() => {
         let word = window.location.hash.replace('#', '');
 
         $.ajax({
-            url: '/langs/polish/words/' + word,
+            url: '/langs/pl/words/' + word,
 
             success: (data) => {
                 $('#ajax-content').html(generateHtml(word, data))
