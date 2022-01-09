@@ -1,8 +1,10 @@
 use std::fs;
 use std::io::ErrorKind;
+use std::process::exit;
 
 use reqwest;
-use rusqlite::{Connection, Transaction};
+use rusqlite::{Connection, Transaction, ErrorCode};
+use rusqlite::Error::SqliteFailure;
 use rusqlite::params;
 use serde_json::Value;
 use serde_json::json;
@@ -36,7 +38,20 @@ impl WordDb {
         let mut conn = self.connect();
         let transaction = conn.transaction().unwrap();
 
-        transaction.execute(&format!("DROP TABLE IF EXISTS {0}_words", &lang.code), []).unwrap();
+        if let Err(e) = transaction.execute(&format!("DROP TABLE IF EXISTS {0}_words", &lang.code), []) {
+            match e {
+                SqliteFailure(f, _) => match f.code {
+                        ErrorCode::ReadOnly => {
+                        eprintln!("Could not write to database: Permission denied");
+                        eprintln!("Please run as root");
+                        exit(1);
+                    },
+                    _ => panic!("{}", e)
+                },
+                _ => panic!("{}", e)
+            }
+        }
+
         transaction.execute(&format!("DROP TABLE IF EXISTS {0}_types", &lang.code), []).unwrap();
 
         transaction.execute(&format!("
