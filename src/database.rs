@@ -1,6 +1,7 @@
 use std::fs;
 use std::io::ErrorKind;
 use std::process::exit;
+use std::collections::HashSet;
 
 use reqwest;
 use rusqlite::{Connection, Transaction, ErrorCode};
@@ -72,14 +73,6 @@ impl WordDb {
             name TINYTEXT UNIQUE NOT NULL
         )", &lang.code), []).unwrap();
 
-        for type_ in &lang.types {
-            transaction.execute(&format!("
-            INSERT INTO {0}_types ( name )
-            VALUES (
-                ?
-            )", &lang.code), [type_]).unwrap();
-        }
-
         transaction.execute(&format!("
         CREATE TABLE {0}_words (
             id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -94,11 +87,6 @@ impl WordDb {
         CREATE INDEX word_index
         ON {0}_words (word)
         ", &lang.code), []).unwrap();
-
-        transaction.execute("
-        INSERT INTO langs (code, name, major, minor, patch)
-        VALUES (?, ?, ?, ?, ?)
-        ", params![&lang.code, &lang.name, MAJOR, MINOR, PATCH]).unwrap();
 
         transaction.commit().unwrap();
     }
@@ -216,6 +204,37 @@ impl WordDb {
         }
     }
 
+    fn insert_types(&mut self, lang: &Language, entries: &WiktionaryEntries) {
+        let mut conn = self.connect();
+        let transaction = conn.transaction().unwrap();
+
+        let mut types = HashSet::new();
+
+        for entry in entries.iter() {
+            types.insert(&entry.type_);
+        }
+
+        for type_ in types {
+            transaction.execute(&format!("
+            INSERT INTO {0}_types ( name )
+            VALUES (?)", &lang.code), [type_]).unwrap();
+        }
+
+        transaction.commit().unwrap();
+    }
+
+    fn insert_version(&mut self, lang: &Language) {
+        let mut conn = self.connect();
+        let transaction = conn.transaction().unwrap();
+
+        transaction.execute("
+        INSERT INTO langs (code, name, major, minor, patch)
+        VALUES (?, ?, ?, ?, ?)
+        ", params![&lang.code, &lang.name, MAJOR, MINOR, PATCH]).unwrap();
+
+        transaction.commit().unwrap();
+    }
+
     pub async fn upgrade_lang(&mut self, lang: &Language) {
         self.try_create_dir(DB_DIR);
 
@@ -251,11 +270,17 @@ impl WordDb {
         println!("Parsing data...");
         let entries = WiktionaryEntries::parse_data(data);
 
-        println!("Inserting data...");
+        println!("Inserting types...");
+        self.insert_types(lang, &entries);
+
+        println!("Inserting entries...");
         self.insert_entries(lang, &entries);
 
         println!("Generating \"form-of\" entries...");
         self.generate_entries(lang, &entries);
+
+        println!("Inserting version...");
+        self.insert_version(lang);
 
         println!("Done");
     }

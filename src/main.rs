@@ -56,30 +56,7 @@ async fn main() {
 
     let mut db = WordDb::new("inflectived.db");
 
-    let lang = Language::new("pl",
-                             "Polish",
-                             vec![String::from("adj"),
-                                  String::from("noun"),
-                                  String::from("verb"),
-                                  String::from("character"),
-                                  String::from("suffix"),
-                                  String::from("prefix"),
-                                  String::from("conj"),
-                                  String::from("adv"),
-                                  String::from("infix"),
-                                  String::from("name"),
-                                  String::from("phrase"),
-                                  String::from("prep_phrase"),
-                                  String::from("intj"),
-                                  String::from("det"),
-                                  String::from("prep"),
-                                  String::from("proverb"),
-                                  String::from("abbrev"),
-                                  String::from("num"),
-                                  String::from("pron"),
-                                  String::from("punct"),
-                                  String::from("interfix"),
-                                  String::from("particle")]);
+    let lang = Language::new("pl", "Polish");
 
     match matches.subcommand() {
         ("upgrade", _) => { db.upgrade_lang(&lang).await; },
