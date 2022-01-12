@@ -43,22 +43,28 @@ $(document).ready(() => {
     function getWord() {
         let word = window.location.hash.replace('#', '');
 
-        $.ajax({
-            url: '/langs/pl/words/' + word,
+        if (word) {
+            document.title = `Inflective - ${decodeURIComponent(word)}`;
 
-            success: (data) => {
-                $('#ajax-content').html(generateHtml(word, data))
-            },
+            $.ajax({
+                url: '/langs/pl/words/' + word,
 
-            error: err => console.error(err)
-        })
+                success: (data) => {
+                    $('#ajax-content').html(generateHtml(word, data));
+                },
 
-        window.scrollTo(0, 0);
-        searchBar.select();
-        searchBar.autocomplete('close');
-        // Sometimes autocomplete opens after close was called
-        // A better fix should be made
-        setTimeout(() => searchBar.autocomplete('close'), 1000);
+                error: err => console.error(err)
+            })
+
+            window.scrollTo(0, 0);
+            searchBar.select();
+            searchBar.autocomplete('close');
+            // Sometimes autocomplete opens after close was called
+            // A better fix should be made
+            setTimeout(() => searchBar.autocomplete('close'), 1000);
+        } else {
+            $('#ajax-content').html('');
+        }
     }
 
     function getCells(forms, tags) {
