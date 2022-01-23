@@ -1,4 +1,5 @@
 use std::fs;
+use std::fs::File;
 use std::collections::HashSet;
 use std::fmt;
 
@@ -41,20 +42,22 @@ impl WordDb {
 
         let conn = Connection::open(&db_path).unwrap();
 
-        let mut statement = conn.prepare(
-            "SELECT code, name, major, minor, patch
-            FROM langs"
-        ).unwrap();
-
-        let mut rows = statement.query([]).unwrap();
-
         let mut installed_langs: Vec<Language> = Vec::new();
 
-        while let Some(row) = rows.next().unwrap() {
-            installed_langs.push(Language::from_row(&row));
-        }
+        let statement = conn.prepare(
+            "SELECT code, name, major, minor, patch
+            FROM langs"
+        );
 
-        installed_langs.sort();
+        if let Ok(mut statement) = statement {
+            let mut rows = statement.query([]).unwrap();
+
+            while let Some(row) = rows.next().unwrap() {
+                installed_langs.push(Language::from_row(&row));
+            }
+
+            installed_langs.sort();
+        }
 
         Self {
             db_path,
@@ -144,7 +147,7 @@ impl WordDb {
         )", &lang.code), []).unwrap();
 
         transaction.execute(&format!("
-        CREATE INDEX word_index
+        CREATE INDEX {0}_word_index
         ON {0}_words (word)
         ", &lang.code), []).unwrap();
 
@@ -161,7 +164,7 @@ impl WordDb {
                 (SELECT id FROM {0}_types WHERE name = ?)
         )", &lang.code),
             params![entry.word,
-                    entry.parsed_json.to_string(),
+                    entry.unparsed_json,
                     entry.type_]
         ).unwrap();
     }
@@ -192,7 +195,7 @@ impl WordDb {
         ).unwrap();
 
         for entry in entries.iter() {
-            if let Some(forms) = entry.parsed_json["forms"].as_array() {
+            if let Some(forms) = entry.parse_json()["forms"].as_array() {
                 let mut forms_vec: Vec<Form> = Vec::new();
 
                 for form in forms {
@@ -219,7 +222,10 @@ impl WordDb {
                         let mut senses: Vec<Value> = Vec::new();
 
                         for form in forms {
-                            let mut tags = form.tags.clone();
+                            let mut tags = match &form.tags {
+                                Some(tags) => tags.clone(),
+                                None => Vec::new()
+                            };
                             tags.push(String::from("form-of"));
                             tags.push(String::from("auto-generated"));
 
@@ -230,7 +236,10 @@ impl WordDb {
                                     }
                                 ],
                                 "glosses": [
-                                    form.tags.join(" ")
+                                    match &form.tags {
+                                        Some(tags) => tags.join(" "),
+                                        None => String::from("")
+                                    }
                                 ],
                                 "tags": tags
                             }));
@@ -244,7 +253,7 @@ impl WordDb {
 
                         let new_entry = WiktionaryEntry::new(forms[0].form.clone(),
                                                              entry.type_.clone(),
-                                                             entry_json);
+                                                             entry_json.to_string());
 
                         self.insert_entry(&transaction, lang, &new_entry);
                     }
@@ -293,7 +302,7 @@ impl WordDb {
         println!("Trying to read cached data...");
         let cache_file = format!("{}/{}.json", CACHE_DIR, &lang.name);
 
-        let cached_data = fs::read_to_string(&cache_file);
+        let mut cached_data = File::open(&cache_file);
         let mut request = None;
 
         if let Err(_) = cached_data {
@@ -305,23 +314,20 @@ impl WordDb {
         println!("Cleaning tables...");
         self.clean_tables(lang)?;
 
-        let data;
         if let Some(request) = request {
             // Actually, the request was sent before
             println!("Requesting data...");
-            data = request.await.unwrap().text().await.unwrap();
-            if cfg!(unix) {
-                println!("Caching data...");
-                util::try_create_dir(CACHE_DIR);
-                fs::write(&cache_file, &data).unwrap();
-            }
-        }
-        else {
-            data = cached_data.unwrap();
+            let data = request.await.unwrap().text().await.unwrap();
+
+            println!("Caching data...");
+            util::try_create_dir(CACHE_DIR);
+            fs::write(&cache_file, &data).unwrap();
+
+            cached_data = File::open(&cache_file);
         }
 
         println!("Parsing data...");
-        let entries = WiktionaryEntries::parse_data(data);
+        let entries = WiktionaryEntries::parse_data(cached_data.unwrap());
 
         println!("Inserting types...");
         self.insert_types(lang, &entries);

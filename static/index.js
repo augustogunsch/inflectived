@@ -8,23 +8,31 @@ $(document).ready(() => {
         success: data => {
             langs = data;
 
-            $('#langs').html(data.map(lang => `<option value="${lang.code}">${lang.name}</option>`));
+            const selectedLangCode = localStorage.selectedLangCode;
 
+            let options = '';
+
+            langs.forEach(lang => {
+                if(selectedLangCode && lang.code == selectedLangCode) {
+                    options += `<option value="${lang.code}" selected>${lang.name}</option>`;
+                } else {
+                    options += `<option value="${lang.code}">${lang.name}</option>`;
+                }
+            });
+
+            $('#langs').html(options);
             setLang($('#langs').val());
         }
     });
 
-    $('#lang').on('change', e => {
-        console.log(e.target.value);
-
-        let langCode = e.target.value;
-
-        setLang(code);
+    $('#langs').on('change', e => {
+        setLang(e.target.value);
     });
 
     function setLang(code) {
-        let lang = langs.find(lang => lang.code == code);
+        const lang = langs.find(lang => lang.code == code);
 
+        localStorage.selectedLangCode = code;
         selectedLang = lang;
 
         $.ajax({
@@ -64,13 +72,13 @@ $(document).ready(() => {
     searchForm.on('submit', e => {
         e.preventDefault();
 
-        let word = e.target[0].value
+        const word = e.target[0].value
 
         window.location.hash = `#${word}`;
     });
 
     function getWord() {
-        let word = window.location.hash.replace('#', '');
+        const word = window.location.hash.replace('#', '');
 
         if (word) {
             document.title = `Inflective - ${decodeURIComponent(word)}`;

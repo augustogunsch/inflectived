@@ -1,3 +1,5 @@
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 use std::cmp;
 use std::slice::Iter;
 use serde_json::Value;
@@ -7,7 +9,7 @@ use serde::Deserialize;
 pub struct WiktionaryEntry {
     pub word: String,
     pub type_: String,
-    pub parsed_json: Value,
+    pub unparsed_json: String
 }
 
 impl cmp::PartialEq for WiktionaryEntry {
@@ -32,6 +34,8 @@ impl cmp::Ord for WiktionaryEntry {
 
 impl WiktionaryEntry {
     pub fn parse(unparsed_json: &str) -> Self {
+        // We could keep this in memory, but for bigger language databases
+        // it's going to crash the program
         let json: Value = serde_json::from_str(unparsed_json).unwrap();
 
         let word = String::from(json["word"].as_str().unwrap());
@@ -40,27 +44,33 @@ impl WiktionaryEntry {
         Self {
             word,
             type_,
-            parsed_json: json
+            unparsed_json: String::from(unparsed_json)
         }
     }
 
-    pub fn new(word: String, type_: String, parsed_json: Value) -> Self {
+    pub fn new(word: String, type_: String, unparsed_json: String) -> Self {
         Self {
             word,
             type_,
-            parsed_json
+            unparsed_json
         }
+    }
+
+    pub fn parse_json(&self) -> Value {
+        serde_json::from_str(&self.unparsed_json).unwrap()
     }
 }
 
 pub struct WiktionaryEntries(Vec<WiktionaryEntry>);
 
 impl WiktionaryEntries {
-    pub fn parse_data(data: String) -> Self {
+    pub fn parse_data(data: File) -> Self {
+        let reader = BufReader::new(data);
+
         let mut entries: Vec<WiktionaryEntry> = Vec::new();
 
-        for line in data.lines() {
-            entries.push(WiktionaryEntry::parse(line));
+        for line in reader.lines() {
+            entries.push(WiktionaryEntry::parse(&line.unwrap()));
         }
 
         Self(entries)
@@ -74,7 +84,7 @@ impl WiktionaryEntries {
 #[derive(Debug, Deserialize)]
 pub struct Form {
     pub form: String,
-    pub tags: Vec<String>,
+    pub tags: Option<Vec<String>>,
     pub source: Option<String>,
 }
 
