@@ -1,15 +1,42 @@
 $(document).ready(() => {
-    let polishSchemas = null;
+    let selectedLang = null;
+    let schema = null;
+    let langs = null;
 
     $.ajax({
-        url: '/static/schemas/polish.json',
+        url: `/langs?installed`,
         success: data => {
-            polishSchemas = data
-            if(window.location.hash) {
-                getWord();
-            }
+            langs = data;
+
+            $('#langs').html(data.map(lang => `<option value="${lang.code}">${lang.name}</option>`));
+
+            setLang($('#langs').val());
         }
     });
+
+    $('#lang').on('change', e => {
+        console.log(e.target.value);
+
+        let langCode = e.target.value;
+
+        setLang(code);
+    });
+
+    function setLang(code) {
+        let lang = langs.find(lang => lang.code == code);
+
+        selectedLang = lang;
+
+        $.ajax({
+            url: `/static/schemas/${lang.name}.json`,
+            success: data => {
+                polishSchemas = data
+                if(window.location.hash) {
+                    getWord();
+                }
+            }
+        });
+    }
 
     const searchBar = $('#search-bar');
     const searchForm = $('#search-form');
@@ -23,7 +50,7 @@ $(document).ready(() => {
         appendTo: '#search-form',
         source: (request, response) => {
             $.ajax({
-                url: '/langs/pl/words?like=' + request.term + '&limit=20&offset=0',
+                url: `/langs/${selectedLang.code}/words?like=${request.term}&limit=20&offset=0`,
                 success: data => response(data)
             })
         },
@@ -49,7 +76,7 @@ $(document).ready(() => {
             document.title = `Inflective - ${decodeURIComponent(word)}`;
 
             $.ajax({
-                url: '/langs/pl/words/' + word,
+                url: `/langs/${selectedLang.code}/words/${word}`,
 
                 success: (data) => {
                     ajaxContent.html(generateHtml(word, data));

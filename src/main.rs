@@ -20,7 +20,8 @@ use database::{WordDb, DbError};
 
 const DB_DIR: &str = "/usr/share/inflectived";
 const CACHE_DIR: &str = "/var/cache/inflectived";
-const FRONTEND_DIR: &str = "/opt/inflectived";
+//const FRONTEND_DIR: &str = "/opt/inflectived";
+const FRONTEND_DIR: &str = "static";
 
 const MAJOR: i32 = 0;
 const MINOR: i32 = 1;
@@ -84,7 +85,7 @@ async fn main() {
                 }
             }
         },
-        ("run", _) => {
+        ("run", matches) => {
             let figment = rocket::Config::figment()
                                          .merge(("address", "0.0.0.0"));
 
@@ -95,7 +96,7 @@ async fn main() {
                                                      views::get_langs,
                                                      views::frontend]);
 
-            if let Ok(true) = fs::try_exists(FRONTEND_DIR) {
+            if let Ok(_) = fs::try_exists(FRONTEND_DIR) {
                 app = app.mount("/static", FileServer::from(FRONTEND_DIR));
             }
 
