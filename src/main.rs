@@ -20,8 +20,7 @@ use database::{WordDb, DbError};
 
 const DB_DIR: &str = "/usr/share/inflectived";
 const CACHE_DIR: &str = "/var/cache/inflectived";
-//const FRONTEND_DIR: &str = "/opt/inflectived";
-const FRONTEND_DIR: &str = "static";
+const FRONTEND_DIR: &str = "/opt/inflectived";
 
 const MAJOR: i32 = 0;
 const MINOR: i32 = 1;
@@ -85,7 +84,7 @@ async fn main() {
                 }
             }
         },
-        ("run", matches) => {
+        ("run", _matches) => {
             let figment = rocket::Config::figment()
                                          .merge(("address", "0.0.0.0"));
 
