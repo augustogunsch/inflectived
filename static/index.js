@@ -11,11 +11,13 @@ $(document).ready(() => {
         }
     });
 
+    const searchBar = $('#search-bar');
+    const searchForm = $('#search-form');
+    const ajaxContent = $('#ajax-content');
+
     window.onhashchange = () => {
         getWord();
     };
-
-    const searchBar = $('#search-bar');
 
     searchBar.autocomplete({
         appendTo: '#search-form',
@@ -32,7 +34,7 @@ $(document).ready(() => {
         setTimeout(() => e.currentTarget.select(), 100);
     });
 
-    $('#search-form').on('submit', e => {
+    searchForm.on('submit', e => {
         e.preventDefault();
 
         let word = e.target[0].value
@@ -50,7 +52,7 @@ $(document).ready(() => {
                 url: '/langs/pl/words/' + word,
 
                 success: (data) => {
-                    $('#ajax-content').html(generateHtml(word, data));
+                    ajaxContent.html(generateHtml(word, data));
                 },
 
                 error: err => console.error(err)
@@ -63,7 +65,7 @@ $(document).ready(() => {
             // A better fix should be made
             setTimeout(() => searchBar.autocomplete('close'), 1000);
         } else {
-            $('#ajax-content').html('');
+            ajaxContent.html('');
         }
     }
 

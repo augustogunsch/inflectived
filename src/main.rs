@@ -1,18 +1,26 @@
-#![feature(slice_group_by)]
+#![feature(slice_group_by, path_try_exists)]
+
+use std::process::exit;
+use std::fs;
 
 //mod database;
 use rocket::routes;
 use rocket::fs::FileServer;
 use clap::{App, AppSettings, Arg, SubCommand};
+
 //use database::WordDb;
 mod database;
 mod language;
 mod entry;
 mod views;
+mod version;
+mod util;
 
-use database::WordDb;
-use language::Language;
+use database::{WordDb, DbError};
 
+const DB_DIR: &str = "/usr/share/inflectived";
+const CACHE_DIR: &str = "/var/cache/inflectived";
+const FRONTEND_DIR: &str = "/opt/inflectived";
 
 const MAJOR: i32 = 0;
 const MINOR: i32 = 1;
@@ -56,23 +64,42 @@ async fn main() {
 
     let mut db = WordDb::new("inflectived.db");
 
-    let lang = Language::new("pl", "Polish");
-
     match matches.subcommand() {
-        ("upgrade", _) => { db.upgrade_lang(&lang).await; },
+        ("upgrade", matches) => {
+            let lang = db.get_lang(matches.unwrap().value_of("LANG").unwrap());
+
+            if let None = lang {
+                eprintln!("The requested language is not available.");
+                eprintln!("Available languages:");
+                eprint!("{}", db.list_available());
+                exit(1);
+            }
+
+            if let Err(e) = db.upgrade_lang(&lang.unwrap()).await {
+                match e {
+                    DbError::AccessDenied => {
+                        eprintln!("Permission denied. Please run as root.");
+                        exit(1);
+                    }
+                }
+            }
+        },
         ("run", _) => {
             let figment = rocket::Config::figment()
                                          .merge(("address", "0.0.0.0"));
 
-            rocket::custom(figment)
-                   .manage(db)
-                   .mount("/static", FileServer::from("static/"))
-                   .mount("/", routes![views::get_entries,
-                                       views::get_entries_like,
-                                       views::get_langs,
-                                       views::frontend])
-                   .launch()
-                   .await.unwrap();
+            let mut app = rocket::custom(figment)
+                                 .manage(db)
+                                 .mount("/", routes![views::get_entries,
+                                                     views::get_entries_like,
+                                                     views::get_langs,
+                                                     views::frontend]);
+
+            if let Ok(true) = fs::try_exists(FRONTEND_DIR) {
+                app = app.mount("/static", FileServer::from(FRONTEND_DIR));
+            }
+
+            app.launch().await.unwrap();
         },
         _ => {}
     }

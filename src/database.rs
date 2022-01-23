@@ -1,7 +1,6 @@
 use std::fs;
-use std::io::ErrorKind;
-use std::process::exit;
 use std::collections::HashSet;
+use std::fmt;
 
 use reqwest;
 use rusqlite::{Connection, Transaction, ErrorCode};
@@ -14,29 +13,81 @@ use serde_json;
 use crate::language::Language;
 use crate::entry::{WiktionaryEntries, WiktionaryEntry};
 use crate::entry::Form;
-use crate::{MAJOR, MINOR, PATCH};
+use crate::{DB_DIR, CACHE_DIR, MAJOR, MINOR, PATCH};
+use crate::util;
 
-const DB_DIR: &str = "/usr/share/inflectived/";
-const CACHE_DIR: &str = "/var/cache/";
+pub enum DbError {
+    AccessDenied,
+}
+
+impl fmt::Display for DbError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            DbError::AccessDenied => write!(f, "Access denied"),
+        }
+    }
+}
 
 /// A database of Wiktionary entries
 pub struct WordDb {
-    db_path: String
+    db_path: String,
+    pub installed_langs: Vec<Language>,
+    pub installable_langs: Vec<Language>
 }
 
 impl WordDb {
     pub fn new(db_name: &str) -> Self {
-        let mut db_path = String::from(DB_DIR);
-        db_path.push_str(db_name);
+        let db_path = format!("{}/{}", DB_DIR, db_name);
 
-        Self { db_path }
+        let conn = Connection::open(&db_path).unwrap();
+
+        let mut statement = conn.prepare(
+            "SELECT code, name, major, minor, patch
+            FROM langs"
+        ).unwrap();
+
+        let mut rows = statement.query([]).unwrap();
+
+        let mut installed_langs: Vec<Language> = Vec::new();
+
+        while let Some(row) = rows.next().unwrap() {
+            installed_langs.push(Language::from_row(&row));
+        }
+
+        installed_langs.sort();
+
+        Self {
+            db_path,
+            installed_langs,
+            installable_langs: Language::list_langs(),
+        }
     }
 
     pub fn connect(&self) -> Connection {
         Connection::open(&self.db_path).unwrap()
     }
 
-    pub fn clean_tables(&mut self, lang: &Language) {
+    pub fn list_available(&self) -> String {
+        let mut list = String::new();
+
+        for lang in &self.installable_langs {
+            list.push_str(&format!(" - {} ({})\n", &lang.name, &lang.code));
+        }
+
+        list
+    }
+
+    pub fn get_lang(&self, code: &str) -> Option<Language> {
+        for lang in &self.installable_langs {
+            if lang.code == code {
+                return Some(lang.clone())
+            }
+        }
+
+        None
+    }
+
+    pub fn clean_tables(&mut self, lang: &Language) -> Result<(), DbError> {
         let mut conn = self.connect();
         let transaction = conn.transaction().unwrap();
 
@@ -51,10 +102,8 @@ impl WordDb {
         )", []) {
             match e {
                 SqliteFailure(f, _) => match f.code {
-                        ErrorCode::ReadOnly => {
-                        eprintln!("Could not write to database: Permission denied");
-                        eprintln!("Please run as root");
-                        exit(1);
+                    ErrorCode::ReadOnly => {
+                        return Err(DbError::AccessDenied)
                     },
                     _ => panic!("{}", e)
                 },
@@ -62,7 +111,18 @@ impl WordDb {
             }
         }
 
-        transaction.execute("DELETE FROM langs WHERE code = ?", [&lang.code]).unwrap();
+        if let Err(e) = transaction.execute(
+            "DELETE FROM langs WHERE code = ?", [&lang.code]) {
+            match e {
+                SqliteFailure(f, _) => match f.code {
+                    ErrorCode::ReadOnly => {
+                        return Err(DbError::AccessDenied)
+                    },
+                    _ => panic!("{}", e)
+                },
+                _ => panic!("{}", e)
+            }
+        };
 
         transaction.execute(&format!("DROP TABLE IF EXISTS {0}_words", &lang.code), []).unwrap();
         transaction.execute(&format!("DROP TABLE IF EXISTS {0}_types", &lang.code), []).unwrap();
@@ -89,6 +149,8 @@ impl WordDb {
         ", &lang.code), []).unwrap();
 
         transaction.commit().unwrap();
+
+        Ok(())
     }
 
     pub fn insert_entry(&self, transaction: &Transaction, lang: &Language, entry: &WiktionaryEntry) {
@@ -194,16 +256,6 @@ impl WordDb {
         transaction.commit().unwrap();
     }
 
-    fn try_create_dir(&self, dir: &str) {
-        match fs::create_dir(dir) {
-            Err(e) => match e.kind() {
-                ErrorKind::AlreadyExists => {},
-                _ => panic!("{}", e)
-            },
-            _ => {}
-        }
-    }
-
     fn insert_types(&mut self, lang: &Language, entries: &WiktionaryEntries) {
         let mut conn = self.connect();
         let transaction = conn.transaction().unwrap();
@@ -235,22 +287,23 @@ impl WordDb {
         transaction.commit().unwrap();
     }
 
-    pub async fn upgrade_lang(&mut self, lang: &Language) {
-        self.try_create_dir(DB_DIR);
+    pub async fn upgrade_lang(&mut self, lang: &Language) -> Result<(), DbError> {
+        util::try_create_dir(DB_DIR);
 
         println!("Trying to read cached data...");
-        let mut cache_file = String::from(CACHE_DIR);
-        cache_file.push_str("Polish.json");
+        let cache_file = format!("{}/{}.json", CACHE_DIR, &lang.name);
 
         let cached_data = fs::read_to_string(&cache_file);
         let mut request = None;
 
         if let Err(_) = cached_data {
-            request = Some(reqwest::get("https://kaikki.org/dictionary/Polish/kaikki.org-dictionary-Polish.json"));
+            let url = format!("https://kaikki.org/dictionary/{0}/kaikki.org-dictionary-{0}.json",
+                              &lang.name);
+            request = Some(reqwest::get(url));
         }
 
         println!("Cleaning tables...");
-        self.clean_tables(lang);
+        self.clean_tables(lang)?;
 
         let data;
         if let Some(request) = request {
@@ -259,7 +312,7 @@ impl WordDb {
             data = request.await.unwrap().text().await.unwrap();
             if cfg!(unix) {
                 println!("Caching data...");
-                self.try_create_dir(CACHE_DIR);
+                util::try_create_dir(CACHE_DIR);
                 fs::write(&cache_file, &data).unwrap();
             }
         }
@@ -283,5 +336,7 @@ impl WordDb {
         self.insert_version(lang);
 
         println!("Done");
+
+        Ok(())
     }
 }
