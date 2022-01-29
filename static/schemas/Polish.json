@@ -385,12 +385,12 @@
         {
           "colspan": 1,
           "rowspan": 1,
-          "tags": ["masculine", "inanimate", "singular", "accusative"]
+          "tags": ["masculine", "animate", "singular", "accusative"]
         },
         {
           "colspan": 1,
           "rowspan": 1,
-          "tags": ["masculine", "animate", "singular", "accusative"]
+          "tags": ["masculine", "inanimate", "singular", "accusative"]
         },
         {
           "colspan": 1,
