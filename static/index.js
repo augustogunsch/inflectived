@@ -72,7 +72,7 @@ $(document).ready(() => {
     searchForm.on('submit', e => {
         e.preventDefault();
 
-        const word = e.target[0].value
+        const word = e.target[0].value.trim();
 
         window.location.hash = `#${word}`;
     });
