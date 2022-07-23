@@ -58,7 +58,7 @@ $(document).ready(() => {
         appendTo: '#search-form',
         source: (request, response) => {
             $.ajax({
-                url: `/langs/${selectedLang.code}/words?like=${request.term}&limit=20&offset=0`,
+                url: `/langs/${selectedLang.code}/words?like=${request.term.trim()}&limit=20&offset=0`,
                 success: data => response(data)
             })
         },
@@ -81,7 +81,8 @@ $(document).ready(() => {
         const word = window.location.hash.replace('#', '');
 
         if (word) {
-            document.title = `Inflective - ${decodeURIComponent(word)}`;
+            const decodedWord = decodeURIComponent(word);
+            document.title = `Inflective - ${decodedWord}`;
 
             $.ajax({
                 url: `/langs/${selectedLang.code}/words/${word}`,
@@ -94,6 +95,7 @@ $(document).ready(() => {
             })
 
             window.scrollTo(0, 0);
+            searchBar.val(decodedWord);
             searchBar.select();
             searchBar.autocomplete('close');
             // Sometimes autocomplete opens after close was called
