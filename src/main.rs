@@ -1,7 +1,7 @@
-#![feature(slice_group_by, path_try_exists)]
+#![feature(slice_group_by, fs_try_exists)]
 
 use std::process::exit;
-use std::fs;
+use std::path::Path;
 
 //mod database;
 use rocket::routes;
@@ -95,7 +95,7 @@ async fn main() {
                                                      views::get_langs,
                                                      views::frontend]);
 
-            if let Ok(_) = fs::try_exists(FRONTEND_DIR) {
+            if let Ok(_) = Path::new(FRONTEND_DIR).try_exists() {
                 app = app.mount("/static", FileServer::from(FRONTEND_DIR));
             }
 

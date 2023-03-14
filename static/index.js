@@ -184,7 +184,7 @@ $(document).ready(() => {
             html += `<h1>Not found: <mark>${decodeURIComponent(word)}</mark></h1>`;
         } else {
             data.forEach(entry => {
-                html += `<h1>${entry.word} <span class="pos">(${entry.pos})</span></h1>`
+                html += `<h1>${entry.word} <span class="pos">${entry.sounds[0].ipa} (${entry.pos})</span></h1>`
                 if('senses' in entry) {
                     let tags = [];
                     entry.senses.forEach(sense => {
