@@ -12,15 +12,15 @@ use crate::language::Language;
 use crate::FRONTEND_DIR;
 
 #[get("/")]
-pub fn frontend() -> content::Html<String> {
+pub fn frontend() -> content::RawHtml<String> {
     match fs::read_to_string(&format!("{}/{}", FRONTEND_DIR, "index.html")) {
-        Ok(file) => content::Html(file),
-        Err(_) => content::Html(String::from("<h1>No web frontend installed.</h1>"))
+        Ok(file) => content::RawHtml(file),
+        Err(_) => content::RawHtml(String::from("<h1>No web frontend installed.</h1>"))
     }
 }
 
 #[get("/langs/<lang>/words/<word>")]
-pub fn get_entries(db: &State<WordDb>, lang: &str, word: &str) -> status::Custom<content::Json<String>> {
+pub fn get_entries(db: &State<WordDb>, lang: &str, word: &str) -> status::Custom<content::RawJson<String>> {
     let conn = db.connect();
 
     let mut statement = conn.prepare(&format!(
@@ -46,7 +46,7 @@ pub fn get_entries(db: &State<WordDb>, lang: &str, word: &str) -> status::Custom
     }
     words.push(']');
 
-    status::Custom(Status::Ok, content::Json(words))
+    status::Custom(Status::Ok, content::RawJson(words))
 }
 
 #[get("/langs/<lang>/words?<like>&<limit>&<offset>")]
