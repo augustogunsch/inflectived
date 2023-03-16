@@ -187,7 +187,7 @@ $(document).ready(() => {
                 html += `<h1>${entry.word} <span class="pos">(${entry.pos})</span></h1>`
 
                 if('sounds' in entry) {
-                    html += `<p>${entry.sounds.map(sound => sound.ipa).join(', ')}</p>`;
+                    html += `<p>${entry.sounds.map(sound => sound.ipa).filter(sound => sound && sound.match(/\/.*\//g)).join(', ')}</p>`;
                 }
 
                 if('senses' in entry) {
