@@ -184,7 +184,12 @@ $(document).ready(() => {
             html += `<h1>Not found: <mark>${decodeURIComponent(word)}</mark></h1>`;
         } else {
             data.forEach(entry => {
-                html += `<h1>${entry.word} <span class="pos">${entry.sounds[0].ipa} (${entry.pos})</span></h1>`
+                html += `<h1>${entry.word} <span class="pos">(${entry.pos})</span></h1>`
+
+                if('sounds' in entry) {
+                    html += `<p>${entry.sounds.map(sound => sound.ipa).join(', ')}</p>`;
+                }
+
                 if('senses' in entry) {
                     let tags = [];
                     entry.senses.forEach(sense => {
@@ -228,7 +233,7 @@ $(document).ready(() => {
                 if('forms' in entry) {
                     if(entry.pos === 'verb') {
                         let conjugation = entry.forms.filter(form =>
-                            'source' in form && form.source === 'Conjugation');
+                            'source' in form && form.source === 'conjugation');
 
                         if(conjugation.length > 0) {
                             html += '<h2>Conjugation</h2>';
@@ -237,7 +242,7 @@ $(document).ready(() => {
                         }
                     } else {
                         let declension = entry.forms.filter(form =>
-                            'source' in form && form.source === 'Declension');
+                            'source' in form && form.source === 'declension');
 
                         if(declension.length > 0) {
                             html += '<h2>Declension</h2>';
